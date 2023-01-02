@@ -1,10 +1,9 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Navigate,
   Route,
-  RouterProvider,
 } from "react-router-dom";
 
 import App from "./App";

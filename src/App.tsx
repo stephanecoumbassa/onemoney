@@ -1,28 +1,26 @@
-import ArchiveIcon from "@mui/icons-material/Archive";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import CategoryIcon from "@mui/icons-material/Category";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import NightlifeIcon from "@mui/icons-material/Nightlife";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import RestoreIcon from "@mui/icons-material/Restore";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
-import { alpha, styled } from "@mui/material/styles";
+import Snackbar from "@mui/material/Snackbar";
+import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import type { PropsWithChildren } from "react";
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./App.module.css";
+import CategoryModal from "./components/modal/CategoryModal";
+import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
+
+const category = await Repository.categoryAll();
+console.log(category);
 
 type ItemProps = PropsWithChildren<{
   theme?: any;
@@ -46,7 +44,16 @@ const Item = styled(Paper)(({ theme, color, width, height }: ItemProps) => ({
 }));
 
 export default function App() {
-  const [value, setValue] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <main className={styles.main}>
@@ -138,7 +145,11 @@ export default function App() {
         <Grid container spacing={2}>
           <Grid xs={3} direction="row">
             <small>Ajouter</small>
-            <Item color="#e6e6f0" style={{ color: "black" }}>
+            <Item
+              color="#e6e6f0"
+              style={{ color: "black" }}
+              onClick={handleClickOpen}
+            >
               <h1>+</h1>
             </Item>
           </Grid>
@@ -166,6 +177,27 @@ export default function App() {
         </Grid>
       </Box>
       <Footer />
+
+      {/* <IncomeModal open={open} handleClose={handleClose} onChange={() => setOpenSnack(true)} /> */}
+      <CategoryModal
+        open={open}
+        handleClose={handleClose}
+        onChange={() => setOpenSnack(true)}
+      />
+
+      <Snackbar
+        key={"top right"}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={4000}
+        open={openSnack}
+        onClose={() => setOpenSnack(false)}
+        // message="La catégorie a été créé avec succès"
+        onClick={() => setOpenSnack(false)}
+      >
+        <Alert severity="success" sx={{ width: "100%" }} onClose={handleClose}>
+          La catégorie a été créé avec succès!
+        </Alert>
+      </Snackbar>
       {/* <img className={styles.logo} alt="React logo" width="400px" src={Logo} /> */}
       {/* <HelloWorld msg="Hello React + TypeScript + Vite" /> */}
     </main>
