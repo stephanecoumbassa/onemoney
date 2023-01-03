@@ -1,26 +1,6 @@
 import Dexie, { Table } from "dexie";
 
-interface Friend {
-  id?: number;
-  name: string;
-  age: number;
-}
-interface Category {
-  id?: number;
-  name: string;
-  type?: string;
-  icon?: string;
-}
-interface Income {
-  id?: number;
-  qty?: number;
-  amount: number;
-  total: number;
-  tva?: number;
-  datecreated: string;
-  dateupdated: string;
-  category: string;
-}
+import { Category, Friend, Income } from "@/Types/BaseType";
 
 class DB extends Dexie {
   friends!: Table<Friend>;

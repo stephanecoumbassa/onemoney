@@ -11,10 +11,12 @@ import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import type { PropsWithChildren } from "react";
-import React, { useState } from "react";
+import React from "react";
 
 import styles from "./App.module.css";
 import CategoryModal from "./components/modal/CategoryModal";
+import ExpenseModal from "./components/modal/ExpenseModal";
+import IncomeModal from "./components/modal/IncomeModal";
 import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -45,7 +47,10 @@ const Item = styled(Paper)(({ theme, color, width, height }: ItemProps) => ({
 
 export default function App() {
   const [open, setOpen] = React.useState(false);
+  const [openIncome, setOpenIncome] = React.useState(false);
+  const [openExpense, setOpenExpense] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
+  const [category, setCategory] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -55,6 +60,24 @@ export default function App() {
     setOpen(false);
   };
 
+  const handleClickOpenIncome = (__category = "Default") => {
+    setCategory(__category);
+    setOpenIncome(true);
+  };
+
+  const handleCloseIncome = () => {
+    setOpenIncome(false);
+  };
+
+  const handleClickOpenExepnse = (__category = "Default") => {
+    setCategory(__category);
+    setOpenExpense(true);
+  };
+
+  const handleCloseExpense = () => {
+    setOpenExpense(false);
+  };
+
   return (
     <main className={styles.main}>
       <Header />
@@ -62,28 +85,43 @@ export default function App() {
         <Grid container spacing={2}>
           <Grid xs={3} direction="row" style={{ textAlign: "center" }}>
             <small>Alimentation</small>
-            <Item color="#3283a8" style={{ color: "white" }}>
+            <Item
+              color="#3283a8"
+              style={{ color: "white" }}
+              onClick={() => handleClickOpenIncome("alimentation")}
+            >
               <FastfoodIcon />
             </Item>
             <small>10000 CFA</small>
           </Grid>
           <Grid xs={3}>
             <small>Restaurant</small>
-            <Item color="#3240a8" style={{ color: "white" }}>
+            <Item
+              color="#3240a8"
+              style={{ color: "white" }}
+              onClick={() => handleClickOpenIncome("restaurant")}
+            >
               <TableRestaurantIcon />
             </Item>
             <small>10000 CFA</small>
           </Grid>
           <Grid xs={3}>
             <small>Loisirs</small>
-            <Item color="#a83256">
+            <Item
+              color="#a83256"
+              onClick={() => handleClickOpenExepnse("loisirs")}
+            >
               <NightlifeIcon style={{ color: "white" }} />
             </Item>
             <small>10000 CFA</small>
           </Grid>
           <Grid xs={3}>
             <small>Transports</small>
-            <Item color="#f08d4f" style={{ color: "white" }}>
+            <Item
+              color="#f08d4f"
+              style={{ color: "white" }}
+              onClick={() => handleClickOpenExepnse("transport")}
+            >
               <DirectionsCarIcon />
             </Item>
             <small>10000 CFA</small>
@@ -118,7 +156,7 @@ export default function App() {
           >
             <CircularProgress
               color="inherit"
-              variant="determinate"
+              variant={"determinate"}
               value={95}
               style={{ width: "130px", marginLeft: "-15px" }}
             />
@@ -185,17 +223,30 @@ export default function App() {
         onChange={() => setOpenSnack(true)}
       />
 
+      <IncomeModal
+        category={category}
+        open={openIncome}
+        handleClose={handleCloseIncome}
+        onChange={() => setOpenSnack(true)}
+      />
+
+      <ExpenseModal
+        category={category}
+        open={openExpense}
+        handleClose={handleCloseExpense}
+        onChange={() => setOpenSnack(true)}
+      />
+
       <Snackbar
         key={"top right"}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         autoHideDuration={4000}
         open={openSnack}
         onClose={() => setOpenSnack(false)}
-        // message="La catégorie a été créé avec succès"
         onClick={() => setOpenSnack(false)}
       >
         <Alert severity="success" sx={{ width: "100%" }} onClose={handleClose}>
-          La catégorie a été créé avec succès!
+          Créé avec succès!
         </Alert>
       </Snackbar>
       {/* <img className={styles.logo} alt="React logo" width="400px" src={Logo} /> */}

@@ -1,6 +1,9 @@
+import { dateformat } from "@/services/UtilService";
+import { Income } from "@/Types/BaseType";
+
 import { db } from "./Db";
 
-// Créez une nouvelle entrée
+// Category
 async function categoryAdd(name: string, icon: string) {
   const id = await db.category.add({ name, icon });
   return id;
@@ -15,8 +18,35 @@ async function categoryGet(id: number) {
   return db.category.get(id);
 }
 
+// Category
+async function incomeAdd(income: Income) {
+  return db.incomes.add({
+    amount: income.amount,
+    qty: income?.qty,
+    tva: income?.tva,
+    category: income?.category ?? "Default",
+    datecreated: dateformat(new Date(), 5),
+    dateupdated: dateformat(new Date(), 5),
+  });
+}
+
+// Expense
+async function expenseAdd(expense: Income) {
+  return db.expenses.add({
+    amount: expense.amount,
+    qty: expense?.qty,
+    tva: expense?.tva,
+    category: expense?.category ?? "Default",
+    description: expense?.description ?? "",
+    datecreated: dateformat(new Date(), 5),
+    dateupdated: dateformat(new Date(), 5),
+  });
+}
+
 export default {
   categoryAdd,
   categoryAll,
   categoryGet,
+  incomeAdd,
+  expenseAdd,
 };

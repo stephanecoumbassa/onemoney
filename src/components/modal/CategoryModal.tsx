@@ -12,7 +12,7 @@ import Icons from "./Icon.json";
 
 export default function CategoryModal({ open, handleClose, onChange }: any) {
   const [name, setName] = React.useState("");
-  const [icons, setIcons] = React.useState([]);
+  const [icons, setIcons] = React.useState<any>([]);
   const [icon, setIcon] = React.useState("");
 
   const addCategory = async () => {
@@ -24,17 +24,16 @@ export default function CategoryModal({ open, handleClose, onChange }: any) {
   const getIconList = async () => {
     const myIcons = Icons as any;
 
-    myIcons.forEach((x, idx) => {
+    myIcons.forEach((x: any, idx: any) => {
       x.label = x.name;
       x.key = idx;
       return x;
     });
-    const unique = [...new Set(myIcons.map(item => item.label))]; // [ 'A', 'B']
-    console.log(unique);
+    const unique = [...new Set(myIcons.map((item: any) => item.label))]; // [ 'A', 'B']
     setIcons(unique);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     getIconList();
   }, []);
 
@@ -62,7 +61,7 @@ export default function CategoryModal({ open, handleClose, onChange }: any) {
           renderOption={(props, option) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
             <i
-              key={props.key}
+              {...props}
               style={{ fontSize: "48px" }}
               className="material-icons"
               onClick={() => setIcon(option)}
@@ -70,13 +69,7 @@ export default function CategoryModal({ open, handleClose, onChange }: any) {
               {option}
             </i>
           )}
-          renderInput={params => (
-            <TextField
-              inputProps={{ ...params.inputProps }}
-              {...params}
-              label="Icon"
-            />
-          )}
+          renderInput={params => <TextField {...params} label="Icon" />}
           onInputChange={(event, newInputValue) => {
             console.log(newInputValue, event);
             setIcon(newInputValue);

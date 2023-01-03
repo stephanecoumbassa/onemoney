@@ -20,6 +20,16 @@
     "test:unit:coverage": "jest --silent --watchAll=false --coverage",
     "typecheck": "tsc --noEmit"
   },
+  "lint-staged": {
+    "*.{css,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "eslint",
+      "prettier --write"
+    ],
+    "package.json": "npx sort-package-json"
+  },
   "config": {
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
