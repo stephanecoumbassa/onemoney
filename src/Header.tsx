@@ -8,10 +8,10 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-const Header = () => {
+const Header = ({color}: any) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar color={color} position="static">
         <Toolbar>
           <IconButton
             size="large"
