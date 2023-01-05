@@ -7,8 +7,12 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import React from "react";
 
 const Header = ({color}: any) => {
+  const [openMenu, setOpenMenu] = React.useState(false)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar color={color} position="static">
@@ -19,6 +23,7 @@ const Header = ({color}: any) => {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={() => {setOpenMenu(true)}}
           >
             <MenuIcon />
           </IconButton>
@@ -71,6 +76,17 @@ const Header = ({color}: any) => {
           </IconButton>
         </Toolbar>
       </AppBar>
+
+      <React.Fragment key={'left'}>
+        {/* <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
+        <Drawer
+          anchor={'left'}
+          open={openMenu}
+          onClose={() => {setOpenMenu(false)}}
+        >
+          draw
+        </Drawer>
+      </React.Fragment>
     </Box>
   );
 };
