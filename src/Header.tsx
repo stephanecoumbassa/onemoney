@@ -18,6 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import LanguageIcon from '@mui/icons-material/Language';
 
 const Header = ({ color }: any) => {
   const [openMenu, setOpenMenu] = React.useState(false);
@@ -73,7 +74,7 @@ const Header = ({ color }: any) => {
             sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
           >
             {" "}
-            29 Décembre 2022{" "}
+            29 Décembre 202211{" "}
           </Typography>
           <IconButton
             size="large"
@@ -100,14 +101,19 @@ const Header = ({ color }: any) => {
           sx={{ width: 'auto' }}
           role="presentation">
             <List>
-              {["Inbox", "Starred", "Send email", "Drafts"].map(
+              {/*{["Inbox", "Starred", "Send email", "Drafts"].map(*/}
+              {[{name: 'langues'}, {name: 'theme'}, {name: 'currency'}, {name: 'format'}].map(
                 (text, index) => (
-                  <ListItem key={text} disablePadding>
+                  <ListItem key={index} disablePadding>
                     <ListItemButton>
                       <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        {index == 0 ? <LanguageIcon /> : <MailIcon />}
+                        {/*{index % 2 === 0 ? <LanguageIcon /> : <MailIcon />}*/}
                       </ListItemIcon>
-                      <ListItemText primary={text} />
+                      {/*<ListItemText primary={text} />*/}
+                      <ListItemText primary={text.name} />
+                      <br/>
+                      <small>{text.name} </small>
                     </ListItemButton>
                   </ListItem>
                 )
