@@ -50,16 +50,6 @@ export default function IncomeModal({
         <br />
         <TextField
           fullWidth
-          margin="dense"
-          name="tva"
-          label="Tva"
-          variant="filled"
-          onChange={e => setTva(parseInt(e.target.value))}
-        />
-        <br />
-        <br />
-        <TextField
-          fullWidth
           multiline
           maxRows={4}
           name="description"

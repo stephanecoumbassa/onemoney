@@ -53,18 +53,6 @@ export default function ExpenseModal({
         <br />
         <TextField
           fullWidth
-          margin="dense"
-          name="tva"
-          label="Tva"
-          variant="filled"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setTva(parseInt(e?.target?.value))
-          }
-        />
-        <br />
-        <br />
-        <TextField
-          fullWidth
           multiline
           maxRows={4}
           name="description"

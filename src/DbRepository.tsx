@@ -27,8 +27,8 @@ async function incomeAdd(income: Income) {
     qty: income?.qty,
     tva: income?.tva,
     category: income?.category ?? "Default",
-    datecreated: dateformat(new Date(), 5),
-    dateupdated: dateformat(new Date(), 5),
+    datecreated: income.datecreated ?? dateformat(new Date(), 5),
+    dateupdated: income.dateupdated ?? dateformat(new Date(), 5),
   });
 }
 
