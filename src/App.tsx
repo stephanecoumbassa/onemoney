@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import type { PropsWithChildren } from "react";
 import React from "react";
-
+import {sumBy, groupBy} from "lodash";
 import styles from "./App.module.css";
 import CategoryModal from "./components/modal/CategoryModal";
 import ExpenseModal from "./components/modal/ExpenseModal";
@@ -20,9 +20,7 @@ import IncomeModal from "./components/modal/IncomeModal";
 import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
-
-const category = await Repository.categoryAll();
-console.log(category);
+import {Income, CategoryList} from "@/Types/BaseType";
 
 type ItemProps = PropsWithChildren<{
   theme?: any;
@@ -52,6 +50,29 @@ export default function App() {
   const [incomeStatus, setIncomeStatus] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [category, setCategory] = React.useState("");
+  const [expenses, setExpenses] = React.useState<any>([]);
+  const [expensesSum, setExpensesSum] = React.useState(0);
+  const [expensesGroup, setExpensesGroup] = React.useState<CategoryList[]>([]);
+
+  // @ts-ignore
+  React.useEffect(() => {
+    let exp = Repository.expenseAll().then((data: any) => {
+      const expGrp = (groupBy(data, 'category') )as CategoryList
+      setExpensesGroup(expGrp)
+      const sum = sumBy(data, 'amount')
+      setExpensesSum(sum)
+      console.log(expGrp)
+      console.log(expGrp, sum)
+    });
+    let incs = Repository.incomeAll().then((data) => {
+      console.log(data)
+    });
+    // console.log(exp)
+    setExpenses(incs)
+  //
+  //   setExpensesSum(_Lodash.sumBy(expenses, 'amount'))
+  //   return true
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,7 +102,7 @@ export default function App() {
 
   return (
     <main className={styles.main}>
-      <Header color="primary" />
+      <Header color="error" />
       {!incomeStatus && (
         <Box sx={{ p: 1, mt: 2 }}>
           <Grid container spacing={2}>
@@ -90,22 +111,22 @@ export default function App() {
               <Item
                 color="#3283a8"
                 style={{ color: "white" }}
-                onClick={() => handleClickOpenIncome("alimentation")}
+                onClick={() => handleClickOpenExepnse("alimentation")}
               >
                 <FastfoodIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>{sumBy(expensesGroup.alimentation, 'amount')} CFA</small>
             </Grid>
             <Grid xs={3}>
-              <small>Restaurant</small>
+              <small>Loyer</small>
               <Item
                 color="#3240a8"
                 style={{ color: "white" }}
-                onClick={() => handleClickOpenIncome("restaurant")}
+                onClick={() => handleClickOpenExepnse("loyer")}
               >
                 <TableRestaurantIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>{sumBy(expensesGroup.loyer, 'amount')} CFA</small>
             </Grid>
             <Grid xs={3}>
               <small>Loisirs</small>
@@ -115,7 +136,7 @@ export default function App() {
               >
                 <NightlifeIcon style={{ color: "white" }} />
               </Item>
-              <small>10000 CFA</small>
+              <small>{sumBy(expensesGroup.loisirs, 'amount')} CFA</small>
             </Grid>
             <Grid xs={3}>
               <small>Transports</small>
@@ -126,7 +147,7 @@ export default function App() {
               >
                 <DirectionsCarIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>{sumBy(expensesGroup['transport'], 'amount')} CFA CFA</small>
             </Grid>
           </Grid>
 
@@ -137,14 +158,14 @@ export default function App() {
                 <Item color="#50cc5c">
                   <LocalHospitalIcon />
                 </Item>
-                <small>10000 CFA</small>
+                <small>{sumBy(expensesGroup.sante, 'amount')} CFA</small>
               </Box>
               <Box sx={{ my: 2 }}>
                 <small>Famille</small>
                 <Item color="#9850cc">
                   <FastfoodIcon />
                 </Item>
-                <small>10000 CFA</small>
+                <small>{sumBy(expensesGroup.famille, 'amount')} CFA</small>
               </Box>
             </Grid>
 
@@ -153,32 +174,37 @@ export default function App() {
               container
               xs={6}
               direction="row"
-              justifyContent="left"
+              justifyContent="center"
               alignItems="center"
             >
-              <CircularProgress
-                color="inherit"
-                variant={"determinate"}
-                value={95}
-                style={{ width: "130px", marginLeft: "-15px" }}
-                onClick={() => setIncomeStatus(true)}
-              />
+              <Box sx={{ position: 'relative', margin: '0 auto'}}>
+                <h1 style={{
+                  color: '#cb1177',
+                  border: '5px solid #cb1177',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  borderRadius: '50%',
+                  paddingTop: '40px',
+                  paddingBottom: '40px'}}
+                  onClick={() => setIncomeStatus(true)}
+                >{expensesSum}</h1>
+              </Box>
             </Grid>
 
             <Grid xs={3}>
               <Box sx={{ my: 2 }}>
-                <small>Cadeaux</small>
+                <small>Restaurant</small>
                 <Item color="#c7263b">
                   <FastfoodIcon />
                 </Item>
-                <small>10000 CFA</small>
+                <small>{sumBy(expensesGroup.restaurant, 'amount')} CFA</small>
               </Box>
               <Box sx={{ my: 2 }}>
                 <small>Achats</small>
                 <Item color="#855140">
                   <FastfoodIcon />
                 </Item>
-                <small>10000 CFA</small>
+                <small>{sumBy(expensesGroup.achat, 'amount')} CFA</small>
               </Box>
             </Grid>
           </Grid>

@@ -5,7 +5,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
-
 import Repository from "../../DbRepository";
 
 export default function ExpenseModal({

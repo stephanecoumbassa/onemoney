@@ -22,3 +22,13 @@ export interface Category {
   type?: string;
   icon?: string;
 }
+
+
+export interface CategoryList {
+  alimentation?: Income[];
+  loyer?: Income[];
+  loisirs?: Income[];
+  transport?: Income[];
+  restaurant?: Income[];
+  achat?: Income[];
+}

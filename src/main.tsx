@@ -22,13 +22,18 @@ const theme = createTheme({
       // This is green.A700 as hex.
       main: "#11cb5f",
     },
+    error: {
+      main: "#cb1177",
+    },
   },
 });
 
 root.render(
   <StrictMode>
     {/* <App> */}
+    <ThemeProvider theme={theme}>
     <RouterProvider router={router} />
+    </ThemeProvider>
     {/* </App> */}
   </StrictMode>
 );

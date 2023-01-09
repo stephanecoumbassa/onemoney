@@ -1,6 +1,5 @@
 import { dateformat } from "@/services/UtilService";
 import { Income } from "@/Types/BaseType";
-
 import { db } from "./Db";
 
 // Category
@@ -18,6 +17,9 @@ async function categoryGet(id: number) {
   return db.category.get(id);
 }
 
+async function incomeAll() {
+  return db.incomes.toArray();
+}
 // Category
 async function incomeAdd(income: Income) {
   return db.incomes.add({
@@ -30,6 +32,10 @@ async function incomeAdd(income: Income) {
   });
 }
 
+
+async function expenseAll() {
+  return db.expenses.toArray();
+}
 // Expense
 async function expenseAdd(expense: Income) {
   return db.expenses.add({
@@ -47,6 +53,10 @@ export default {
   categoryAdd,
   categoryAll,
   categoryGet,
+  //INCOMES
+  incomeAll,
   incomeAdd,
+  //EXPENSES
+  expenseAll,
   expenseAdd,
 };
