@@ -5,9 +5,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
-import Repository from "../../DbRepository";
+import { useDispatch, useSelector } from "react-redux";
 
-const dateForDateTimeInputValue = new Date().toISOString().split('T')[0]
+import Repository from "../../DbRepository";
+import { expenseDispatch } from "../../stores/BaseStore";
+
+const dateForDateTimeInputValue = new Date().toISOString().split("T")[0];
 
 export default function ExpenseModal({
   open,
@@ -15,33 +18,35 @@ export default function ExpenseModal({
   onChange,
   category,
 }: any) {
-  const [qty, setQty] = React.useState(0);
   const [amount, setAmount] = React.useState(0);
-  const [tva, setTva] = React.useState(0);
-  const [datecreated, setDatecreated] = React.useState<string>("");
+  const [datecreated, setDatecreated] = React.useState<string>(
+    dateForDateTimeInputValue
+  );
   const [description, setDescription] = React.useState<string>("");
 
   const addExpense = async () => {
-    await Repository.expenseAdd({ amount, qty, tva, category, description, datecreated });
+    await Repository.expenseAdd({
+      amount,
+      qty: 1,
+      tva: 0,
+      category,
+      description,
+      datecreated,
+    });
+    await Repository.expenseAll().then((data: any) => {
+      expenseDispatch(data);
+    });
     handleClose();
     onChange(true);
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Ajouter une dépense</DialogTitle>
+      <DialogTitle>
+        Ajouter une dépense
+        <br />(<small>{category}</small>)
+      </DialogTitle>
       <DialogContent>
-        {/* <TextField
-          fullWidth
-          margin="dense"
-          name="name"
-          label="Quantité"
-          variant="filled"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setQty(parseInt(e?.target?.value))
-          }
-        /> */}
-        
         <TextField
           fullWidth
           name="name"
@@ -66,7 +71,7 @@ export default function ExpenseModal({
         />
         <br />
         <br />
-        
+        {datecreated}
         <TextField
           id="datetime-local"
           label="Date"

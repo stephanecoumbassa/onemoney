@@ -10,9 +10,14 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
+import { sumBy } from "@types/lodash";
 import type { PropsWithChildren } from "react";
 import React from "react";
-import {sumBy, groupBy} from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+
+import { numerique } from "@/services/UtilService";
+import { CategoryList, Income, Stateype } from "@/Types/BaseType";
+
 import styles from "./App.module.css";
 import CategoryModal from "./components/modal/CategoryModal";
 import ExpenseModal from "./components/modal/ExpenseModal";
@@ -20,10 +25,12 @@ import IncomeModal from "./components/modal/IncomeModal";
 import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
-import {Income, CategoryList} from "@/Types/BaseType";
-import { useSelector, useDispatch } from 'react-redux'
-
-
+import {
+  expenseDispatch,
+  incomeDispatch,
+  setExpensesGroup,
+  setExpenseSum,
+} from "./stores/BaseStore";
 
 type ItemProps = PropsWithChildren<{
   theme?: any;
@@ -46,6 +53,21 @@ const Item = styled(Paper)(({ theme, color, width, height }: ItemProps) => ({
   margin: "0 auto",
 }));
 
+function Gridelement({ data, category, color, onclick, children }) {
+  return (
+    <Grid xs={3} direction="row" style={{ textAlign: "center" }}>
+      <small>{category}</small>
+      <Item color={color} style={{ color: "white" }} onClick={onclick}>
+        {children}
+      </Item>
+      <small>
+        {sumBy(data, "amount")}
+        <small>CFA</small>
+      </small>
+    </Grid>
+  );
+}
+
 export default function App() {
   const [open, setOpen] = React.useState(false);
   const [openIncome, setOpenIncome] = React.useState(false);
@@ -53,33 +75,24 @@ export default function App() {
   const [incomeStatus, setIncomeStatus] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [category, setCategory] = React.useState("");
-  const [expenses, setExpenses] = React.useState<any>([]);
-  const [expensesSum, setExpensesSum] = React.useState(0);
-  const [expensesGroup, setExpensesGroup] = React.useState<CategoryList[]>([]);
-    const count = useSelector((state) => {
-      console.log(state)
-    })
-    const dispatch = useDispatch()
+  const expenseSum = useSelector((state: Stateype) => state?.base.expenseSum);
+  const expensesGroup = useSelector<any>(
+    (state: Stateype) => state?.base.expensesGroup
+  );
+  const incomeSum = useSelector((state: Stateype) => state?.base.incomeSum);
+  const incomesGroup = useSelector<any>(
+    (state: Stateype) => state?.base.incomesGroup
+  );
 
+  const dispatch = useDispatch();
 
-  // @ts-ignore
   React.useEffect(() => {
-    let exp = Repository.expenseAll().then((data: any) => {
-      const expGrp = (groupBy(data, 'category') )as CategoryList
-      setExpensesGroup(expGrp)
-      const sum = sumBy(data, 'amount')
-      setExpensesSum(sum)
-      //console.log(expGrp)
-      //console.log(expGrp, sum)
+    Repository.expenseAll().then((data: any) => {
+      expenseDispatch(data);
     });
-    let incs = Repository.incomeAll().then((data) => {
-      //console.log(data)
+    Repository.incomeAll().then((data: any) => {
+      incomeDispatch(data);
     });
-    // console.log(exp)
-    setExpenses(incs)
-  //
-  //   setExpensesSum(_Lodash.sumBy(expenses, 'amount'))
-  //   return true
   }, []);
 
   const handleClickOpen = () => {
@@ -114,17 +127,17 @@ export default function App() {
       {!incomeStatus && (
         <Box sx={{ p: 1, mt: 2 }}>
           <Grid container spacing={2}>
-            <Grid xs={3} direction="row" style={{ textAlign: "center" }}>
-              <small>Alimentation</small>
-              <Item
-                color="#3283a8"
-                style={{ color: "white" }}
-                onClick={() => handleClickOpenExepnse("alimentation")}
-              >
-                <FastfoodIcon />
-              </Item>
-              <small>{sumBy(expensesGroup.alimentation, 'amount')} CFA</small>
-            </Grid>
+            <Gridelement
+              data={expensesGroup?.alimentation}
+              category={"alimentation"}
+              color={"#3283a8"}
+              onclick={() => {
+                handleClickOpenExepnse("alimentation");
+              }}
+            >
+              <FastfoodIcon />
+            </Gridelement>
+
             <Grid xs={3}>
               <small>Loyer</small>
               <Item
@@ -134,7 +147,9 @@ export default function App() {
               >
                 <TableRestaurantIcon />
               </Item>
-              <small>{sumBy(expensesGroup.loyer, 'amount')} CFA</small>
+              <small>
+                {sumBy(expensesGroup?.loyer, "amount")} <small>CFA</small>
+              </small>
             </Grid>
             <Grid xs={3}>
               <small>Loisirs</small>
@@ -144,7 +159,9 @@ export default function App() {
               >
                 <NightlifeIcon style={{ color: "white" }} />
               </Item>
-              <small>{sumBy(expensesGroup.loisirs, 'amount')} CFA</small>
+              <small>
+                {sumBy(expensesGroup?.loisirs, "amount")} <small>CFA</small>
+              </small>
             </Grid>
             <Grid xs={3}>
               <small>Transports</small>
@@ -155,7 +172,9 @@ export default function App() {
               >
                 <DirectionsCarIcon />
               </Item>
-              <small>{sumBy(expensesGroup['transport'], 'amount')} CFA CFA</small>
+              <small>
+                {sumBy(expensesGroup["transport"], "amount")} <small>CFA</small>
+              </small>
             </Grid>
           </Grid>
 
@@ -163,17 +182,23 @@ export default function App() {
             <Grid xs={3}>
               <Box sx={{ my: 2 }}>
                 <small>Santé</small>
-                <Item color="#50cc5c">
+                <Item
+                  color="#50cc5c"
+                  onClick={() => handleClickOpenExepnse("sante")}
+                >
                   <LocalHospitalIcon />
                 </Item>
-                <small>{sumBy(expensesGroup.sante, 'amount')} CFA</small>
+                <small>{sumBy(expensesGroup.sante, "amount")} CFA</small>
               </Box>
               <Box sx={{ my: 2 }}>
                 <small>Famille</small>
-                <Item color="#9850cc">
+                <Item
+                  color="#9850cc"
+                  onClick={() => handleClickOpenExepnse("famille")}
+                >
                   <FastfoodIcon />
                 </Item>
-                <small>{sumBy(expensesGroup.famille, 'amount')} CFA</small>
+                <small>{sumBy(expensesGroup.famille, "amount")} CFA</small>
               </Box>
             </Grid>
 
@@ -185,34 +210,45 @@ export default function App() {
               justifyContent="center"
               alignItems="center"
             >
-              <Box sx={{ position: 'relative', margin: '0 auto'}}>
-                <h1 style={{
-                  color: '#cb1177',
-                  border: '5px solid #cb1177',
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  borderRadius: '50%',
-                  paddingTop: '40px',
-                  paddingBottom: '40px'}}
+              <Box sx={{ position: "relative", margin: "0 auto" }}>
+                <button
+                  style={{
+                    color: "#cb1177",
+                    fontSize: "2em",
+                    border: "3px solid #cb1177",
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    borderRadius: "50%",
+                    paddingTop: "30px",
+                    paddingBottom: "30px",
+                  }}
                   onClick={() => setIncomeStatus(true)}
-                >{expensesSum}</h1>
+                >
+                  {numerique(expenseSum)}
+                </button>
               </Box>
             </Grid>
 
             <Grid xs={3}>
               <Box sx={{ my: 2 }}>
                 <small>Restaurant</small>
-                <Item color="#c7263b">
+                <Item
+                  color="#c7263b"
+                  onClick={() => handleClickOpenExepnse("restaurant")}
+                >
                   <FastfoodIcon />
                 </Item>
-                <small>{sumBy(expensesGroup.restaurant, 'amount')} CFA</small>
+                <small>{sumBy(expensesGroup.restaurant, "amount")} CFA</small>
               </Box>
               <Box sx={{ my: 2 }}>
                 <small>Achats</small>
-                <Item color="#855140">
+                <Item
+                  color="#855140"
+                  onClick={() => handleClickOpenExepnse("achats")}
+                >
                   <FastfoodIcon />
                 </Item>
-                <small>{sumBy(expensesGroup.achat, 'amount')} CFA</small>
+                <small>{sumBy(expensesGroup.achat, "amount")} CFA</small>
               </Box>
             </Grid>
           </Grid>
@@ -261,43 +297,49 @@ export default function App() {
               <Item
                 color="#00ad76"
                 style={{ color: "white" }}
-                onClick={() => handleClickOpenIncome("alimentation")}
+                onClick={() => handleClickOpenIncome("salaire")}
               >
                 <FastfoodIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>{numerique(sumBy(incomesGroup?.salaire, "amount"))}</small>
             </Grid>
             <Grid xs={3}>
-              <small>Combo</small>
+              <small>Business</small>
               <Item
                 color="#03825a"
                 style={{ color: "white" }}
-                onClick={() => handleClickOpenIncome("restaurant")}
+                onClick={() => handleClickOpenIncome("business")}
               >
                 <TableRestaurantIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>
+                {numerique(sumBy(incomesGroup?.business, "amount"))}
+              </small>
             </Grid>
             <Grid xs={3}>
-              <small>Consultance</small>
+              <small>Services</small>
               <Item
                 color="#025c3f"
-                onClick={() => handleClickOpenExepnse("loisirs")}
+                onClick={() => handleClickOpenExepnse("service")}
               >
                 <NightlifeIcon style={{ color: "white" }} />
               </Item>
-              <small>10000 CFA</small>
+              <small>
+                {numerique(sumBy(incomesGroup?.service, "amount"))}{" "}
+              </small>
             </Grid>
             <Grid xs={3}>
               <small>Autres</small>
               <Item
                 color="#013827"
                 style={{ color: "white" }}
-                onClick={() => handleClickOpenExepnse("transport")}
+                onClick={() => handleClickOpenExepnse("autres")}
               >
                 <DirectionsCarIcon />
               </Item>
-              <small>10000 CFA</small>
+              <small>
+                {numerique(sumBy(incomesGroup?.autres, "amount"))} CFA
+              </small>
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -323,16 +365,24 @@ export default function App() {
               container
               xs={6}
               direction="row"
-              justifyContent="left"
+              justifyContent="center"
               alignItems="center"
             >
-              <CircularProgress
-                color="inherit"
-                variant={"determinate"}
-                value={95}
-                style={{ width: "130px", marginLeft: "-15px" }}
+              <button
+                style={{
+                  color: "#11cb7d",
+                  fontSize: "2em",
+                  border: "3px solid #11cb7d",
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                  borderRadius: "50%",
+                  paddingTop: "30px",
+                  paddingBottom: "30px",
+                }}
                 onClick={() => setIncomeStatus(false)}
-              />
+              >
+                {numerique(incomeSum)}
+              </button>
             </Grid>
 
             <Grid xs={3}>

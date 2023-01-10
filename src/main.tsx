@@ -4,12 +4,12 @@ import { purple, teal } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import {store} from "./stores/BaseStore"
-import { Provider } from "react-redux"
 
 // import App from "./App";
 import router from "./Routes";
+import { store } from "./stores/BaseStore";
 
 const container = document.getElementById("root");
 const root = createRoot(container as HTMLDivElement);

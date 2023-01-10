@@ -1,6 +1,10 @@
+import { useDispatch, useSelector } from "react-redux";
+
 import { dateformat } from "@/services/UtilService";
 import { Income } from "@/Types/BaseType";
+
 import { db } from "./Db";
+// const dispatch = useDispatch()
 
 // Category
 async function categoryAdd(name: string, icon: string) {
@@ -27,12 +31,11 @@ async function incomeAdd(income: Income) {
     qty: income?.qty,
     tva: income?.tva,
     category: income?.category ?? "Default",
-    description: expense?.description ?? "",
+    description: income?.description ?? "",
     datecreated: dateformat(income.datecreated ?? new Date(), 5),
     dateupdated: income.dateupdated ?? dateformat(new Date(), 5),
   });
 }
-
 
 async function expenseAll() {
   return db.expenses.toArray();

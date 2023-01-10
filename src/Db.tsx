@@ -19,7 +19,6 @@ class DB extends Dexie {
       expenses:
         "++id, qty, amount, total, tva, datecreated, dateupdated, category",
     });
-
   }
 }
 

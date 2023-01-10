@@ -27,7 +27,7 @@ export function lower(value: string) {
   return value.charAt(0).toLowerCase() + value.slice(1);
 }
 
-export function dateformat(date: Date, type = 1) {
+export function dateformat(date: string | Date, type = 1) {
   date = new Date(date);
   const options = {
     weekday: "long",
