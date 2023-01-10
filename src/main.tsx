@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
+import {store} from "./stores/BaseStore"
+import { Provider } from "react-redux"
 
 // import App from "./App";
 import router from "./Routes";
@@ -31,9 +33,11 @@ const theme = createTheme({
 root.render(
   <StrictMode>
     {/* <App> */}
-    <ThemeProvider theme={theme}>
-    <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
     {/* </App> */}
   </StrictMode>
 );

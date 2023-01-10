@@ -7,6 +7,8 @@ import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
 import Repository from "../../DbRepository";
 
+const dateForDateTimeInputValue = new Date().toISOString().split('T')[0]
+
 export default function ExpenseModal({
   open,
   handleClose,
@@ -16,10 +18,11 @@ export default function ExpenseModal({
   const [qty, setQty] = React.useState(0);
   const [amount, setAmount] = React.useState(0);
   const [tva, setTva] = React.useState(0);
+  const [datecreated, setDatecreated] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
 
   const addExpense = async () => {
-    await Repository.expenseAdd({ amount, qty, tva, category, description });
+    await Repository.expenseAdd({ amount, qty, tva, category, description, datecreated });
     handleClose();
     onChange(true);
   };
@@ -28,7 +31,7 @@ export default function ExpenseModal({
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Ajouter une dépense</DialogTitle>
       <DialogContent>
-        <TextField
+        {/* <TextField
           fullWidth
           margin="dense"
           name="name"
@@ -37,9 +40,8 @@ export default function ExpenseModal({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setQty(parseInt(e?.target?.value))
           }
-        />
-        <br />
-        <br />
+        /> */}
+        
         <TextField
           fullWidth
           name="name"
@@ -62,6 +64,24 @@ export default function ExpenseModal({
             setDescription(e?.target?.value)
           }
         />
+        <br />
+        <br />
+        
+        <TextField
+          id="datetime-local"
+          label="Date"
+          type="date"
+          defaultValue={dateForDateTimeInputValue}
+          sx={{ width: 250 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setDatecreated(e?.target?.value)
+          }
+        />
+        <br />
+        <br />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Annuler</Button>

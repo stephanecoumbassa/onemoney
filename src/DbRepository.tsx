@@ -27,7 +27,8 @@ async function incomeAdd(income: Income) {
     qty: income?.qty,
     tva: income?.tva,
     category: income?.category ?? "Default",
-    datecreated: income.datecreated ?? dateformat(new Date(), 5),
+    description: expense?.description ?? "",
+    datecreated: dateformat(income.datecreated ?? new Date(), 5),
     dateupdated: income.dateupdated ?? dateformat(new Date(), 5),
   });
 }
@@ -44,7 +45,7 @@ async function expenseAdd(expense: Income) {
     tva: expense?.tva,
     category: expense?.category ?? "Default",
     description: expense?.description ?? "",
-    datecreated: dateformat(new Date(), 5),
+    datecreated: dateformat(expense.datecreated ?? new Date(), 5),
     dateupdated: dateformat(new Date(), 5),
   });
 }

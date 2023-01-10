@@ -21,6 +21,9 @@ import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
 import {Income, CategoryList} from "@/Types/BaseType";
+import { useSelector, useDispatch } from 'react-redux'
+
+
 
 type ItemProps = PropsWithChildren<{
   theme?: any;
@@ -53,6 +56,11 @@ export default function App() {
   const [expenses, setExpenses] = React.useState<any>([]);
   const [expensesSum, setExpensesSum] = React.useState(0);
   const [expensesGroup, setExpensesGroup] = React.useState<CategoryList[]>([]);
+    const count = useSelector((state) => {
+      console.log(state)
+    })
+    const dispatch = useDispatch()
+
 
   // @ts-ignore
   React.useEffect(() => {
@@ -61,11 +69,11 @@ export default function App() {
       setExpensesGroup(expGrp)
       const sum = sumBy(data, 'amount')
       setExpensesSum(sum)
-      console.log(expGrp)
-      console.log(expGrp, sum)
+      //console.log(expGrp)
+      //console.log(expGrp, sum)
     });
     let incs = Repository.incomeAll().then((data) => {
-      console.log(data)
+      //console.log(data)
     });
     // console.log(exp)
     setExpenses(incs)

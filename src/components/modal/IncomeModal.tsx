@@ -5,8 +5,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
-
 import Repository from "../../DbRepository";
+
+const dateForDateTimeInputValue = date => new Date(date.getTime() + new Date().getTimezoneOffset() * -60 * 1000).toISOString().slice(0, 19)
+console.log(dateForDateTimeInputValue)
 
 export default function IncomeModal({
   open,
@@ -29,16 +31,14 @@ export default function IncomeModal({
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Ajouter un revenu</DialogTitle>
       <DialogContent>
-        <TextField
+        {/* <TextField
           fullWidth
           margin="dense"
           name="name"
           label="Quantité"
           variant="filled"
           onChange={e => setQty(parseInt(e.target.value))}
-        />
-        <br />
-        <br />
+        /> */}
         <TextField
           fullWidth
           name="name"
@@ -59,6 +59,20 @@ export default function IncomeModal({
             setDescription(e?.target?.value)
           }
         />
+        <br />
+        <br />
+        <TextField
+          id="datetime-local"
+          label="Date"
+          type="datetime-local"
+          defaultValue={dateForDateTimeInputValue}
+          sx={{ width: 250 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <br />
+        <br />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Annuler</Button>
