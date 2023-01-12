@@ -21,6 +21,7 @@ import { expenseDispatch, incomeDispatch } from "@/stores/BaseStore";
 import { Income, Stateype } from "@/Types/BaseType";
 
 import styles from "../App.module.css";
+import {BudgetStat} from "@/components/stat/BudgetStat";
 
 // const dateForDateTimeInputValue = new Date().toISOString().split("T")[0];
 
@@ -90,6 +91,15 @@ export default function Budgets() {
               </ListItem>
             ))}
           </List>
+        </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <BudgetStat />
+          </Grid>
+          <Grid item xs={12}>
+            <BudgetStat />
+          </Grid>
         </Grid>
       </Box>
 

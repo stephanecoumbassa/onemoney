@@ -1,9 +1,12 @@
 const enum Constantes {
-  FAUX = 0,
-  VRAI = 1,
+  NO = 0,
+  YES = 1,
   INCOME = "income",
   EXPENSE = "expense",
-  DEFAUFTCOLOR = "#fff"
+  DEFAUFTCOLOR = "#fff",
+  INCOMECOLOR = "#fff",
+  EXPENSECOLOR = "#fff",
+  BUDGETCOLOR = "#fff",
 }
 
 export default Constantes;
