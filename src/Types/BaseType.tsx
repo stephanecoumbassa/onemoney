@@ -10,12 +10,6 @@ export interface Income {
   category?: string;
 }
 
-export interface Friend {
-  id?: number;
-  name: string;
-  age: number;
-}
-
 export interface Category {
   id?: number;
   name: string;
@@ -31,24 +25,31 @@ export interface CategoryList {
   transport?: Income[];
   restaurant?: Income[];
   achat?: Income[];
+  business?: Income[];
+  salaire?: Income[];
+  sante?: Income[];
+  service?: Income[];
+  autres?: Income[];
 }
 
 export interface Stateype {
   base: {
     value: number;
-    expenses: any[];
-    incomes: any[];
+    expenses: Income[];
+    incomes: Income[];
     expenseGroup?: any[];
-    expensesGroup?: CategoryList[];
-    incomeGroup?: any[];
+    budgetsGroup?: any[];
+    expensesGroup?: CategoryList[] | undefined[];
+    incomeGroup?: CategoryList[] | undefined[];
     incomesGroup?: any[];
-    income: object;
-    expense: object;
-    incomeSum: number;
-    expenseSum: number;
-    balance: number;
-    expenseModalStatus: boolean;
-    incomeModalStatus: boolean;
-    baseUrl: string;
+    income?: object;
+    expense?: object;
+    incomeSum?: number;
+    expenseSum?: number;
+    budgetSum?: number;
+    balance?: number;
+    expenseModalStatus?: boolean;
+    incomeModalStatus?: boolean;
+    baseUrl?: string;
   };
 }

@@ -5,10 +5,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import Repository from "../../DbRepository";
-import { expenseDispatch } from "../../stores/BaseStore";
+import Repository from "@/DbRepository";
+import { expenseDispatch } from "@/stores/BaseStore";
 
 const dateForDateTimeInputValue = new Date().toISOString().split("T")[0];
 
@@ -33,9 +32,7 @@ export default function ExpenseModal({
       description,
       datecreated,
     });
-    await Repository.expenseAll().then((data: any) => {
-      expenseDispatch(data);
-    });
+    expenseDispatch();
     handleClose();
     onChange(true);
   };
@@ -71,7 +68,6 @@ export default function ExpenseModal({
         />
         <br />
         <br />
-        {datecreated}
         <TextField
           id="datetime-local"
           label="Date"

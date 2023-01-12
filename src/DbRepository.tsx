@@ -21,10 +21,10 @@ async function categoryGet(id: number) {
   return db.category.get(id);
 }
 
+// Income
 async function incomeAll() {
   return db.incomes.toArray();
 }
-// Category
 async function incomeAdd(income: Income) {
   return db.incomes.add({
     amount: income.amount,
@@ -37,10 +37,10 @@ async function incomeAdd(income: Income) {
   });
 }
 
+// Expense
 async function expenseAll() {
   return db.expenses.toArray();
 }
-// Expense
 async function expenseAdd(expense: Income) {
   return db.expenses.add({
     amount: expense.amount,
@@ -53,6 +53,44 @@ async function expenseAdd(expense: Income) {
   });
 }
 
+// Income
+async function budgetAll() {
+  return db.budgets.toArray();
+}
+
+async function budgetAdd(income: Income) {
+  const newDate = new Date();
+  newDate.setDate(1);
+  let datecreated = newDate;
+  if (income.datecreated) {
+    const dte = new Date(income.datecreated);
+    dte.setDate(1);
+    datecreated = dte;
+  }
+  const criteres = {
+    category: income.category,
+    datecreated: dateformat(datecreated, 5),
+  };
+
+  const getBudget = await db.budgets.where(criteres).count();
+
+  const values = {
+    amount: income.amount,
+    qty: income?.qty,
+    tva: income?.tva,
+    category: income?.category ?? "Default",
+    description: income?.description ?? "",
+    datecreated: dateformat(datecreated, 5),
+    dateupdated: income.dateupdated ?? dateformat(new Date(), 5),
+  };
+
+  if (getBudget) {
+    return db.budgets.where(criteres).modify(values);
+  } else {
+    return db.budgets.add(values);
+  }
+}
+
 export default {
   categoryAdd,
   categoryAll,
@@ -63,4 +101,7 @@ export default {
   //EXPENSES
   expenseAll,
   expenseAdd,
+  //BUDGETS
+  budgetAdd,
+  budgetAll,
 };

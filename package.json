@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "npm run typecheck && vite build",
-    "build1": "npm run typecheck && vite build",
+    "build1": "vite build",
     "commit": "git-cz",
     "dev": "vite",
     "format": "prettier . --write --ignore-path .gitignore && git update-index --again",

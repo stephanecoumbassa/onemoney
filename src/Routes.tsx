@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import App from "./App";
+import Budgets from "./pages/Budgets";
 
 type Props = PropsWithChildren<{
   start?: number;
@@ -38,35 +39,37 @@ function ProtectedRoute({
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      <Route path="/budgets" element={<Budgets />} />
       <Route path="/" element={<App />}>
         <Route path="/hello" element={<App />} />
-        <Route
-          path="/hello1"
-          element={
-            <ProtectedRoute
-              authenticationPath=""
-              isAuthenticated={true}
-              outlet={<App />}
-            />
-          }
-        />
+        {/*<Route path="/budgets" element={<Budgets />} />*/}
+        {/*<Route*/}
+        {/*  path="/hello1"*/}
+        {/*  element={*/}
+        {/*    <ProtectedRoute*/}
+        {/*      authenticationPath=""*/}
+        {/*      isAuthenticated={true}*/}
+        {/*      outlet={<App />}*/}
+        {/*    />*/}
+        {/*  }*/}
+        {/*/>*/}
       </Route>
-      <Route
-        path="/test"
-        element={
-          <>
-            <h1>test</h1>
-          </>
-        }
-      />
-      <Route
-        path="/hello2"
-        element={
-          <PrivateRoute>
-            <App />
-          </PrivateRoute>
-        }
-      />
+      {/*<Route*/}
+      {/*  path="/test"*/}
+      {/*  element={*/}
+      {/*    <>*/}
+      {/*      <h1>test</h1>*/}
+      {/*    </>*/}
+      {/*  }*/}
+      {/*/>*/}
+      {/*<Route*/}
+      {/*  path="/hello2"*/}
+      {/*  element={*/}
+      {/*    <PrivateRoute>*/}
+      {/*      <App />*/}
+      {/*    </PrivateRoute>*/}
+      {/*  }*/}
+      {/*/>*/}
     </>
   )
 );

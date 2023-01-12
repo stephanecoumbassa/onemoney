@@ -5,7 +5,7 @@ export function convert(str: string) {
   return [date.getFullYear(), mnth, day].join("-");
 }
 
-export function numerique(value: string | number) {
+export function numerique(value: string | number | unknown) {
   return String(value)
     .replace(/\D/g, "")
     .replace(/\B(?=(\d{3})+(?!\d))/g, " ");

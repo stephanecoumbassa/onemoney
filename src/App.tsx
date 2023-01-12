@@ -5,32 +5,25 @@ import NightlifeIcon from "@mui/icons-material/Nightlife";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
-import { sumBy } from "@types/lodash";
+import sumBy from "lodash/sumBy";
 import type { PropsWithChildren } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { numerique } from "@/services/UtilService";
-import { CategoryList, Income, Stateype } from "@/Types/BaseType";
+import { expenseDispatch, incomeDispatch } from "@/stores/BaseStore";
+import { CategoryList, Stateype } from "@/Types/BaseType";
 
 import styles from "./App.module.css";
 import CategoryModal from "./components/modal/CategoryModal";
 import ExpenseModal from "./components/modal/ExpenseModal";
 import IncomeModal from "./components/modal/IncomeModal";
-import Repository from "./DbRepository";
 import Footer from "./Footer";
 import Header from "./Header";
-import {
-  expenseDispatch,
-  incomeDispatch,
-  setExpensesGroup,
-  setExpenseSum,
-} from "./stores/BaseStore";
 
 type ItemProps = PropsWithChildren<{
   theme?: any;
@@ -53,16 +46,16 @@ const Item = styled(Paper)(({ theme, color, width, height }: ItemProps) => ({
   margin: "0 auto",
 }));
 
-function Gridelement({ data, category, color, onclick, children }) {
+function Gridelement({ data, category, color, onclick, children }: any) {
   return (
     <Grid xs={3} direction="row" style={{ textAlign: "center" }}>
-      <small>{category}</small>
+      <small style={{ textTransform: "capitalize" }}>{category}</small>
       <Item color={color} style={{ color: "white" }} onClick={onclick}>
         {children}
       </Item>
       <small>
-        {sumBy(data, "amount")}
-        <small>CFA</small>
+        {numerique(sumBy(data, "amount"))}
+        {/*<small>CFA</small>*/}
       </small>
     </Grid>
   );
@@ -76,23 +69,19 @@ export default function App() {
   const [openSnack, setOpenSnack] = React.useState(false);
   const [category, setCategory] = React.useState("");
   const expenseSum = useSelector((state: Stateype) => state?.base.expenseSum);
-  const expensesGroup = useSelector<any>(
-    (state: Stateype) => state?.base.expensesGroup
+  const expensesGroup: any = useSelector(
+    (state: Stateype) => state.base.expensesGroup
   );
   const incomeSum = useSelector((state: Stateype) => state?.base.incomeSum);
-  const incomesGroup = useSelector<any>(
-    (state: Stateype) => state?.base.incomesGroup
+  const incomesGroup: any = useSelector(
+    (state: Stateype) => state.base.incomesGroup
   );
 
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    Repository.expenseAll().then((data: any) => {
-      expenseDispatch(data);
-    });
-    Repository.incomeAll().then((data: any) => {
-      incomeDispatch(data);
-    });
+    expenseDispatch();
+    incomeDispatch();
   }, []);
 
   const handleClickOpen = () => {
@@ -138,44 +127,38 @@ export default function App() {
               <FastfoodIcon />
             </Gridelement>
 
-            <Grid xs={3}>
-              <small>Loyer</small>
-              <Item
-                color="#3240a8"
-                style={{ color: "white" }}
-                onClick={() => handleClickOpenExepnse("loyer")}
-              >
-                <TableRestaurantIcon />
-              </Item>
-              <small>
-                {sumBy(expensesGroup?.loyer, "amount")} <small>CFA</small>
-              </small>
-            </Grid>
-            <Grid xs={3}>
-              <small>Loisirs</small>
-              <Item
-                color="#a83256"
-                onClick={() => handleClickOpenExepnse("loisirs")}
-              >
-                <NightlifeIcon style={{ color: "white" }} />
-              </Item>
-              <small>
-                {sumBy(expensesGroup?.loisirs, "amount")} <small>CFA</small>
-              </small>
-            </Grid>
-            <Grid xs={3}>
-              <small>Transports</small>
-              <Item
-                color="#f08d4f"
-                style={{ color: "white" }}
-                onClick={() => handleClickOpenExepnse("transport")}
-              >
-                <DirectionsCarIcon />
-              </Item>
-              <small>
-                {sumBy(expensesGroup["transport"], "amount")} <small>CFA</small>
-              </small>
-            </Grid>
+            <Gridelement
+              data={expensesGroup?.loyer}
+              category={"loyer"}
+              color={"#3240a8"}
+              onclick={() => {
+                handleClickOpenExepnse("loyer");
+              }}
+            >
+              <FastfoodIcon />
+            </Gridelement>
+
+            <Gridelement
+              data={expensesGroup?.loisirs}
+              category={"loisirs"}
+              color={"#a83256"}
+              onclick={() => {
+                handleClickOpenExepnse("loisirs");
+              }}
+            >
+              <NightlifeIcon style={{ color: "white" }} />
+            </Gridelement>
+
+            <Gridelement
+              data={expensesGroup?.transport}
+              category={"transport"}
+              color={"#a83256"}
+              onclick={() => {
+                handleClickOpenExepnse("transport");
+              }}
+            >
+              <DirectionsCarIcon />
+            </Gridelement>
           </Grid>
 
           <Grid container spacing={2}>
@@ -224,7 +207,7 @@ export default function App() {
                   }}
                   onClick={() => setIncomeStatus(true)}
                 >
-                  {numerique(expenseSum)}
+                  {numerique(Number(expenseSum))}
                 </button>
               </Box>
             </Grid>

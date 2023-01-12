@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import React, { ChangeEvent } from "react";
 
 import Repository from "../../DbRepository";
-import { incomeDispatch } from "../../stores/BaseStore";
+import { incomeDispatch } from "@/stores/BaseStore";
 
 const dateForDateTimeInputValue = new Date().toISOString().split("T")[0];
 
@@ -32,9 +32,7 @@ export default function IncomeModal({
       description,
       datecreated,
     });
-    await Repository.incomeAll().then((data: any) => {
-      incomeDispatch(data);
-    });
+    incomeDispatch();
     handleClose();
     onChange(true);
   };

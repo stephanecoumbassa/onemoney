@@ -1,19 +1,26 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import {groupBy, sumBy} from "lodash";
+import groupBy from "lodash/groupBy";
+import sumBy from "lodash/sumBy";
+
+import Repository from "@/DbRepository";
 
 export const baseSlice = createSlice({
   name: "base",
   initialState: {
     value: 0,
-    valuesum: 0,
     expenses: [],
     incomes: [],
     expensesGroup: [],
     incomesGroup: [],
-    budgets: {},
+    budgetsGroup: [],
+    budgets: [],
+    budget: {},
     income: {},
     expense: {},
+    valuesum: 0,
     incomeSum: 0,
+    budgetSum: 0,
+    expenseSum: 0,
     balance: 0,
     expenseModalStatus: false,
     incomeModalStatus: false,
@@ -26,10 +33,6 @@ export const baseSlice = createSlice({
     decrement: state => {
       state.value -= 1;
     },
-    addvaluesum: (state, action) => {
-      state.valuesum = action.payload;
-      state.expenseSum = action.payload;
-    },
     incrementByAmount: (state, action) => {
       state.value = action.payload;
       return state;
@@ -41,14 +44,17 @@ export const baseSlice = createSlice({
     setIncomeSum: (state, action) => {
       state.incomeSum = action.payload;
     },
+    setBudgetSum: (state, action) => {
+      state.budgetSum = action.payload;
+    },
     setBalance: (state, action) => {
       state.balance = action.payload;
     },
-    setExpenseModalStatus: (state, action) => {
+    setExpenseModalStatus: state => {
       // state.expenseModalStatus = action.payload
       state.expenseModalStatus = !state.expenseModalStatus;
     },
-    setIncomeModalStatus: (state, action) => {
+    setIncomeModalStatus: state => {
       state.expenseModalStatus = !state.expenseModalStatus;
     },
     setExpensesGroup: (state, action) => {
@@ -56,6 +62,12 @@ export const baseSlice = createSlice({
     },
     setIncomesGroup: (state, action) => {
       state.incomesGroup = action.payload;
+    },
+    setBudgetsGroup: (state, action) => {
+      state.budgetsGroup = action.payload;
+    },
+    setBudgets: (state, action) => {
+      state.budgets = action.payload;
     },
   },
 });
@@ -71,6 +83,9 @@ export const {
   setIncomeModalStatus,
   setExpensesGroup,
   setIncomesGroup,
+  setBudgetSum,
+  setBudgets,
+  setBudgetsGroup,
 } = baseSlice.actions;
 
 export const store = configureStore({
@@ -79,18 +94,31 @@ export const store = configureStore({
   },
 });
 
-export function expenseDispatch(data) {
-  const expGrp = groupBy(data, "category");
-  store.dispatch(setExpensesGroup(expGrp));
-  const sum = sumBy(data, "amount");
-  store.dispatch(setExpenseSum(sum));
-}
+// DISPATCHERS FUNCTIONS
+export const budgetDispatch = async () => {
+  await Repository.budgetAll().then(data => {
+    const budGrp = groupBy(data, "category");
+    store.dispatch(setBudgetsGroup(budGrp));
+    const sum = sumBy(data, "amount");
+    store.dispatch(setBudgetSum(sum));
+  });
+};
 
-export function incomeDispatch(data) {
-  const icomeGrp = groupBy(data, "category");
-  store.dispatch(setIncomesGroup(icomeGrp));
-  console.log(icomeGrp);
-  const sum = sumBy(data, "amount");
-  console.log(sum);
-  store.dispatch(setIncomeSum(sum));
-}
+export const expenseDispatch = async () => {
+  await Repository.expenseAll().then(data => {
+    const expGrp = groupBy(data, "category");
+    store.dispatch(setExpensesGroup(expGrp));
+    const sum = sumBy(data, "amount");
+    store.dispatch(setExpenseSum(sum));
+  });
+};
+
+export const incomeDispatch = async () => {
+  await Repository.incomeAll().then(data => {
+    const icomeGrp = groupBy(data, "category");
+    store.dispatch(setIncomesGroup(icomeGrp));
+    console.log(icomeGrp);
+    const sum = sumBy(data, "amount");
+    store.dispatch(setIncomeSum(sum));
+  });
+};

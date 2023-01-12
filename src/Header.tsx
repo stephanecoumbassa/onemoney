@@ -12,7 +12,7 @@ import React from "react";
 
 import Navigation from "@/Navigation";
 
-const Header = ({ color }: any) => {
+const Header = ({ color, title }: any) => {
   const [openMenu, setOpenMenu] = React.useState(false);
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -36,8 +36,7 @@ const Header = ({ color }: any) => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
           >
-            {" "}
-            Tous les comptes{" "}
+            {title ?? "Tous les comptes"}
           </Typography>
           <IconButton
             size="large"
