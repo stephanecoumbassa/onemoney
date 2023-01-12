@@ -1,44 +1,47 @@
-import type { PropsWithChildren } from "react";
+// import type { PropsWithChildren } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate,
+  // Navigate,
   Route,
 } from "react-router-dom";
 
 import App from "./App";
-import Budgets from "./pages/Budgets";
+import Budgets from "@/pages/Budgets";
+import Transactions from "@/pages/Transactions";
 
-type Props = PropsWithChildren<{
-  start?: number;
-}>;
+// type Props = PropsWithChildren<{
+//   start?: number;
+// }>;
 
-function PrivateRoute({ children }: Props): JSX.Element {
-  const authed = false; // isauth() returns true or false based on localStorage
-  return authed ? children : <Navigate to="/test" />;
-}
+// function PrivateRoute({ children }: Props): JSX.Element {
+//   const authed = false; // isauth() returns true or false based on localStorage
+//   return authed ? children : <Navigate to="/test" />;
+// }
+//
+// type ProtectedRouteProps = {
+//   isAuthenticated?: boolean;
+//   authenticationPath?: string;
+//   outlet?: JSX.Element;
+// };
 
-type ProtectedRouteProps = {
-  isAuthenticated?: boolean;
-  authenticationPath?: string;
-  outlet?: JSX.Element;
-};
-
-function ProtectedRoute({
-  isAuthenticated,
-  authenticationPath,
-  outlet,
-}: ProtectedRouteProps) {
-  if (isAuthenticated) {
-    return outlet;
-  } else {
-    return <Navigate to={{ pathname: authenticationPath }} />;
-  }
-}
+// function ProtectedRoute({
+//   isAuthenticated,
+//   authenticationPath,
+//   outlet,
+// }: ProtectedRouteProps) {
+//   if (isAuthenticated) {
+//     return outlet;
+//   } else {
+//     return <Navigate to={{ pathname: authenticationPath }} />;
+//   }
+// }
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      {/*<Route path="/budgets" element={<Budgets />} />*/}
+      <Route path="/transactions" element={<Transactions />} />
       <Route path="/budgets" element={<Budgets />} />
       <Route path="/" element={<App />}>
         <Route path="/hello" element={<App />} />

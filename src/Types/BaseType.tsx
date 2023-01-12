@@ -5,9 +5,10 @@ export interface Income {
   tva?: number;
   description?: string;
   amount: number;
-  datecreated?: string;
+  datecreated?: string | any | Date;
   dateupdated?: string;
   category?: string;
+  type?: string;
 }
 
 export interface Category {

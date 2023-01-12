@@ -14,9 +14,9 @@ class DB extends Dexie {
       icon: "++id, name",
       category: "++id, name, type, icon",
       incomes:
-        "++id, qty, amount, total, tva, datecreated, dateupdated, category",
+        "++id, qty, amount, total, tva, datecreated, dateupdated, category, type",
       expenses:
-        "++id, qty, amount, total, tva, datecreated, dateupdated, category",
+        "++id, qty, amount, total, tva, datecreated, dateupdated, category, type",
       budgets:
         "++id, qty, amount, total, tva, datecreated, dateupdated, category",
     });

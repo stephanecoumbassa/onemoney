@@ -4,10 +4,12 @@
 }
 
 .main p {
-  margin: 16px 0;
+  /*margin: 16px 0;*/
+  margin: 3px 0;
 }
 
 .logo {
   margin: 0 auto;
   padding-top: 60px;
 }
+

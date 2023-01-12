@@ -69,6 +69,12 @@ export const baseSlice = createSlice({
     setBudgets: (state, action) => {
       state.budgets = action.payload;
     },
+    setIncomes: (state, action) => {
+      state.incomes = action.payload;
+    },
+    setExpenses: (state, action) => {
+      state.expenses = action.payload;
+    },
   },
 });
 
@@ -76,16 +82,22 @@ export const {
   increment,
   decrement,
   incrementByAmount,
+  //EXPENSES
+  setExpenses,
   setExpenseSum,
-  setIncomeSum,
-  setBalance,
   setExpenseModalStatus,
-  setIncomeModalStatus,
   setExpensesGroup,
+  //INCOMES
+  setIncomeSum,
+  setIncomes,
   setIncomesGroup,
+  setIncomeModalStatus,
+  //BUDGETS
   setBudgetSum,
   setBudgets,
   setBudgetsGroup,
+  //BALANCES
+  setBalance,
 } = baseSlice.actions;
 
 export const store = configureStore({
@@ -106,6 +118,7 @@ export const budgetDispatch = async () => {
 
 export const expenseDispatch = async () => {
   await Repository.expenseAll().then(data => {
+    store.dispatch(setExpenses(data));
     const expGrp = groupBy(data, "category");
     store.dispatch(setExpensesGroup(expGrp));
     const sum = sumBy(data, "amount");
@@ -115,9 +128,9 @@ export const expenseDispatch = async () => {
 
 export const incomeDispatch = async () => {
   await Repository.incomeAll().then(data => {
+    store.dispatch(setIncomes(data));
     const icomeGrp = groupBy(data, "category");
     store.dispatch(setIncomesGroup(icomeGrp));
-    console.log(icomeGrp);
     const sum = sumBy(data, "amount");
     store.dispatch(setIncomeSum(sum));
   });

@@ -27,6 +27,7 @@ async function incomeAll() {
 }
 async function incomeAdd(income: Income) {
   return db.incomes.add({
+    type: "income",
     amount: income.amount,
     qty: income?.qty,
     tva: income?.tva,
@@ -43,6 +44,7 @@ async function expenseAll() {
 }
 async function expenseAdd(expense: Income) {
   return db.expenses.add({
+    type: "expense",
     amount: expense.amount,
     qty: expense?.qty,
     tva: expense?.tva,

@@ -9,11 +9,28 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { useSelector } from "react-redux";
 
 import Navigation from "@/Navigation";
+import { numerique } from "@/services/UtilService";
+import { expenseDispatch, incomeDispatch } from "@/stores/BaseStore";
+import { Stateype } from "@/Types/BaseType";
 
 const Header = ({ color, title }: any) => {
   const [openMenu, setOpenMenu] = React.useState(false);
+  // const budgetSum = useSelector((state: Stateype) => state?.base.budgetSum);
+  const incomeSum = useSelector((state: Stateype) => state?.base.incomeSum);
+  const expenseSum = useSelector((state: Stateype) => state?.base.expenseSum);
+
+  const getBalance = () => {
+    return numerique(Number(incomeSum) - Number(expenseSum));
+  };
+
+  React.useState(() => {
+    expenseDispatch();
+    incomeDispatch();
+  });
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar color={color} position="static">
@@ -32,11 +49,12 @@ const Header = ({ color, title }: any) => {
           </IconButton>
           <Typography
             noWrap
-            variant="h6"
+            variant="h5"
             component="div"
             sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
           >
-            {title ?? "Tous les comptes"}
+            {/*{title ?? "Tous les comptes"}*/}
+            {title ?? getBalance() + "CFA"}
           </Typography>
           <IconButton
             size="large"
@@ -65,7 +83,7 @@ const Header = ({ color, title }: any) => {
             sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
           >
             {" "}
-            29 Décembre 202211{" "}
+            29 Décembre 2022{" "}
           </Typography>
           <IconButton
             size="large"

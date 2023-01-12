@@ -39,7 +39,7 @@ function Footer() {
         <BottomNavigationAction
           label="Transactions"
           icon={<ReceiptIcon />}
-          onClick={() => navigate("/trasactions")}
+          onClick={() => navigate("/transactions")}
         />
         <BottomNavigationAction
           label="Stats"
